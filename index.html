@@ -194,6 +194,72 @@
   #panel-resume .download-btn:active{ transform: scale(0.96); }
 
   #panel-detail{ z-index:30; }
+
+  /* contact scheduler */
+  #panel-contact{ padding:24px; }
+  .scheduler{
+    display:grid; grid-template-columns:200px 1fr 220px; gap:0;
+    width:min(880px, 94vw); max-height:86vh;
+    background:var(--card-bg); border-radius:14px; overflow:hidden; text-align:left;
+    box-shadow:0 26px 60px -20px rgba(0,0,0,0.35); transition: background 0.3s ease;
+  }
+  .sched-col{ padding:24px 20px; }
+  .sched-info{ border-right:1px solid var(--border-soft); display:flex; flex-direction:column; }
+  .sched-avatar{ width:44px; height:44px; border-radius:50%; object-fit:cover; margin-bottom:12px; }
+  .sched-name{ font-size:0.82rem; color:var(--muted); margin-bottom:6px; }
+  .sched-title{ font-family:'Newsreader', serif; font-size:1.15rem; margin-bottom:18px; line-height:1.3; }
+  .sched-row{ display:flex; align-items:center; gap:9px; font-size:0.8rem; color:var(--muted); margin-bottom:12px; }
+  .sched-row svg{ flex-shrink:0; opacity:0.8; }
+  .sched-whatsapp{
+    margin-top:auto; font-size:0.78rem; font-weight:600; color:var(--ink); text-decoration:none;
+    border-bottom:1px solid var(--hairline); padding-bottom:2px; align-self:flex-start;
+  }
+
+  .sched-calendar{ border-right:1px solid var(--border-soft); }
+  .sched-cal-head{ display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; }
+  .sched-cal-month{ font-weight:600; font-size:0.95rem; }
+  .sched-cal-nav button{
+    background:none; border:1px solid var(--border); color:var(--ink); width:26px; height:26px;
+    border-radius:50%; cursor:pointer; font-size:0.9rem; margin-left:6px; line-height:1;
+  }
+  .sched-cal-nav button:hover{ background:var(--border-soft); }
+  .sched-cal-weekdays, .sched-cal-grid{ display:grid; grid-template-columns:repeat(7, 1fr); gap:4px; }
+  .sched-cal-weekdays div{ font-size:0.68rem; color:var(--muted); text-align:center; padding-bottom:6px; }
+  .sched-cal-grid button{
+    aspect-ratio:1; border:none; background:none; color:var(--ink); font-size:0.8rem;
+    border-radius:8px; cursor:pointer; transition:background 0.15s ease, opacity 0.15s ease;
+  }
+  .sched-cal-grid button:hover:not(:disabled){ background:var(--border-soft); }
+  .sched-cal-grid button:disabled{ opacity:0.25; cursor:default; }
+  .sched-cal-grid button.selected{ background:var(--ink); color:var(--ink-contrast); }
+  .sched-cal-grid button.today:not(.selected){ border:1px solid var(--border); }
+
+  .sched-slots-head{ font-weight:600; font-size:0.9rem; margin-bottom:14px; }
+  .sched-slots-list{ display:flex; flex-direction:column; gap:8px; max-height:280px; overflow-y:auto; padding-right:4px; }
+  .sched-slots-list button{
+    border:1px solid var(--border); background:none; color:var(--ink); font-size:0.8rem; font-weight:500;
+    padding:9px 0; border-radius:8px; cursor:pointer; transition:background 0.15s ease, color 0.15s ease;
+  }
+  .sched-slots-list button:hover{ background:var(--ink); color:var(--ink-contrast); }
+  .sched-slots-list button.picked{ background:var(--ink); color:var(--ink-contrast); }
+  .sched-confirm{ display:none; flex-direction:column; gap:8px; margin-top:14px; }
+  .sched-confirm.show{ display:flex; }
+  .sched-confirm input{
+    border:1px solid var(--border); background:none; color:var(--ink); font-size:0.8rem;
+    padding:9px 10px; border-radius:8px; font-family:'Manrope', sans-serif;
+  }
+  .sched-confirm input::placeholder{ color:var(--muted); }
+  .sched-confirm button{
+    background:var(--ink); color:var(--ink-contrast); border:none; font-size:0.8rem; font-weight:600;
+    padding:10px 0; border-radius:8px; cursor:pointer; transition:opacity 0.2s ease;
+  }
+  .sched-confirm button:hover{ opacity:0.85; }
+
+  @media (max-width: 760px){
+    .scheduler{ grid-template-columns:1fr; max-height:82vh; overflow-y:auto; }
+    .sched-info, .sched-calendar{ border-right:none; border-bottom:1px solid var(--border-soft); }
+  }
+
   #panel-detail .detail-inner{ max-width:640px; max-height:80vh; overflow-y:auto; }
   #panel-detail h2{ margin-bottom:6px; }
   #panel-detail .d-desc{ color:var(--muted); font-size:0.88rem; margin-bottom:26px; }
@@ -260,18 +326,48 @@
 
 <div class="panel" id="panel-contact">
   <button class="close" data-close="contact">Close</button>
-  <h2>Let's talk</h2>
-  <p class="panel-sub">Have a project in mind? Send an email, or start a chat on WhatsApp.</p>
-  <div class="contact-ctas">
-    <a class="cta-btn" id="ctaEmail" href="#">Email Me</a>
-    <a class="cta-btn cta-whatsapp" id="ctaWhatsapp" href="#" target="_blank" rel="noopener">
-      <svg viewBox="0 0 32 32" width="16" height="16" fill="currentColor" aria-hidden="true">
-        <path d="M16.001 3C9.373 3 4 8.373 4 15c0 2.386.63 4.622 1.734 6.555L4 29l7.637-1.703A11.94 11.94 0 0 0 16 27c6.628 0 12-5.373 12-12S22.629 3 16.001 3zm.001 21.75c-1.98 0-3.855-.53-5.463-1.454l-.392-.228-4.53 1.01 1.03-4.43-.256-.406A9.71 9.71 0 0 1 5.25 15c0-5.937 4.813-10.75 10.75-10.75S26.75 9.063 26.75 15 21.938 24.75 16.002 24.75zm5.514-8.11c-.303-.152-1.79-.883-2.067-.984-.278-.102-.48-.152-.682.152-.202.303-.784.984-.961 1.187-.177.203-.354.228-.657.076-.303-.152-1.278-.471-2.435-1.505-.9-.803-1.507-1.796-1.684-2.098-.177-.303-.019-.466.133-.617.137-.136.303-.354.455-.531.152-.177.202-.303.303-.505.101-.203.05-.379-.025-.531-.076-.152-.682-1.646-.935-2.254-.246-.591-.497-.511-.682-.52-.177-.008-.379-.01-.581-.01-.202 0-.531.076-.809.379-.278.303-1.06 1.036-1.06 2.526 0 1.49 1.086 2.93 1.238 3.132.152.202 2.137 3.266 5.176 4.578.723.312 1.287.499 1.727.638.726.231 1.387.198 1.909.12.582-.087 1.79-.732 2.042-1.439.253-.708.253-1.314.177-1.44-.076-.126-.278-.202-.581-.354z"/>
-      </svg>
-      WhatsApp
-    </a>
+  <div class="scheduler">
+    <div class="sched-col sched-info">
+      <img class="sched-avatar" id="schedAvatar" src="" alt="">
+      <div class="sched-name" id="schedName"></div>
+      <div class="sched-title">Let's talk — 30 min call</div>
+      <div class="sched-row">
+        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+        30 min
+      </div>
+      <div class="sched-row">
+        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="2" y="6" width="14" height="12" rx="2"/><path d="M16 10l6-3v10l-6-3"/></svg>
+        Online call
+      </div>
+      <div class="sched-row">
+        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.5 3.5 6 3.5 9s-1 6.5-3.5 9c-2.5-2.5-3.5-6-3.5-9s1-6.5 3.5-9z"/></svg>
+        Asia/Dhaka
+      </div>
+      <a class="sched-whatsapp" id="schedWhatsapp" href="#" target="_blank" rel="noopener">Prefer WhatsApp? Chat now →</a>
+    </div>
+
+    <div class="sched-col sched-calendar">
+      <div class="sched-cal-head">
+        <div class="sched-cal-month" id="calMonthLabel"></div>
+        <div class="sched-cal-nav">
+          <button id="calPrev" aria-label="Previous month">‹</button>
+          <button id="calNext" aria-label="Next month">›</button>
+        </div>
+      </div>
+      <div class="sched-cal-weekdays" id="calWeekdays"></div>
+      <div class="sched-cal-grid" id="calGrid"></div>
+    </div>
+
+    <div class="sched-col sched-slots">
+      <div class="sched-slots-head" id="slotsHead"></div>
+      <div class="sched-slots-list" id="slotsList"></div>
+      <div class="sched-confirm" id="schedConfirm">
+        <input type="text" id="bookName" placeholder="Your name" />
+        <input type="email" id="bookEmail" placeholder="Your email" />
+        <button id="bookConfirm">Confirm booking</button>
+      </div>
+    </div>
   </div>
-  <div class="info-list contact-list" id="contactList"></div>
 </div>
 
 <div class="panel" id="panel-resume">
@@ -356,11 +452,116 @@ document.getElementById("nameAvatarImg").src = PROFILE.avatar;
 document.getElementById("hireBtn").href = `mailto:${PROFILE.email}?subject=Let's%20work%20together`;
 document.getElementById("hireBtn").addEventListener("click", (e) => { playClick(); ripple(e.clientX, e.clientY); });
 
-document.getElementById("ctaEmail").href = `mailto:${PROFILE.email}`;
-document.getElementById("ctaEmail").addEventListener("click", (e) => { playClick(); ripple(e.clientX, e.clientY); });
+document.getElementById("schedAvatar").src = PROFILE.avatar;
+document.getElementById("schedName").textContent = PROFILE.name;
+document.getElementById("schedWhatsapp").href = `https://wa.me/${PROFILE.whatsapp}`;
+document.getElementById("schedWhatsapp").addEventListener("click", (e) => { playClick(); ripple(e.clientX, e.clientY); });
 
-document.getElementById("ctaWhatsapp").href = `https://wa.me/${PROFILE.whatsapp}`;
-document.getElementById("ctaWhatsapp").addEventListener("click", (e) => { playClick(); ripple(e.clientX, e.clientY); });
+/* ---------------- contact scheduler: calendar + time slots ---------------- */
+
+const calMonthLabel = document.getElementById("calMonthLabel");
+const calWeekdays = document.getElementById("calWeekdays");
+const calGrid = document.getElementById("calGrid");
+const slotsHead = document.getElementById("slotsHead");
+const slotsList = document.getElementById("slotsList");
+const schedConfirm = document.getElementById("schedConfirm");
+const bookName = document.getElementById("bookName");
+const bookEmail = document.getElementById("bookEmail");
+const bookConfirmBtn = document.getElementById("bookConfirm");
+
+const WEEKDAY_LABELS = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
+const MONTH_LABELS = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+
+const today = new Date();
+today.setHours(0, 0, 0, 0);
+let calViewYear = today.getFullYear();
+let calViewMonth = today.getMonth();
+let selectedDate = new Date(today);
+let selectedSlot = null;
+
+calWeekdays.innerHTML = WEEKDAY_LABELS.map(d => `<div>${d}</div>`).join("");
+
+function sameDay(a, b) {
+  return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
+}
+
+function renderCalendar() {
+  calMonthLabel.textContent = `${MONTH_LABELS[calViewMonth]} ${calViewYear}`;
+  const firstDay = new Date(calViewYear, calViewMonth, 1);
+  const daysInMonth = new Date(calViewYear, calViewMonth + 1, 0).getDate();
+  const startOffset = firstDay.getDay();
+
+  let html = "";
+  for (let i = 0; i < startOffset; i++) html += "<div></div>";
+  for (let d = 1; d <= daysInMonth; d++) {
+    const date = new Date(calViewYear, calViewMonth, d);
+    const isPast = date < today;
+    const isToday = sameDay(date, today);
+    const isSelected = sameDay(date, selectedDate);
+    html += `<button ${isPast ? "disabled" : ""} data-day="${d}" class="${isToday ? "today " : ""}${isSelected ? "selected" : ""}">${d}</button>`;
+  }
+  calGrid.innerHTML = html;
+
+  calGrid.querySelectorAll("button:not(:disabled)").forEach(btn => {
+    btn.addEventListener("click", () => {
+      selectedDate = new Date(calViewYear, calViewMonth, parseInt(btn.dataset.day, 10));
+      selectedSlot = null;
+      renderCalendar();
+      renderSlots();
+    });
+  });
+}
+
+function renderSlots() {
+  const label = selectedDate.toLocaleDateString(undefined, { weekday: "short", day: "numeric", month: "short" });
+  slotsHead.textContent = label;
+
+  const slots = [];
+  for (let h = 9; h <= 17; h++) {
+    for (const m of [0, 30]) {
+      if (h === 17 && m === 30) continue;
+      const hour12 = h % 12 === 0 ? 12 : h % 12;
+      const ampm = h < 12 ? "am" : "pm";
+      slots.push(`${hour12}:${m === 0 ? "00" : "30"}${ampm}`);
+    }
+  }
+
+  slotsList.innerHTML = slots.map(s => `<button data-slot="${s}">${s}</button>`).join("");
+  schedConfirm.classList.remove("show");
+
+  slotsList.querySelectorAll("button").forEach(btn => {
+    btn.addEventListener("click", () => {
+      selectedSlot = btn.dataset.slot;
+      slotsList.querySelectorAll("button").forEach(b => b.classList.remove("picked"));
+      btn.classList.add("picked");
+      schedConfirm.classList.add("show");
+    });
+  });
+}
+
+document.getElementById("calPrev").addEventListener("click", () => {
+  calViewMonth--;
+  if (calViewMonth < 0) { calViewMonth = 11; calViewYear--; }
+  renderCalendar();
+});
+document.getElementById("calNext").addEventListener("click", () => {
+  calViewMonth++;
+  if (calViewMonth > 11) { calViewMonth = 0; calViewYear++; }
+  renderCalendar();
+});
+
+bookConfirmBtn.addEventListener("click", (e) => {
+  playClick(); ripple(e.clientX, e.clientY);
+  const name = bookName.value.trim() || "(name not entered)";
+  const email = bookEmail.value.trim() || "(email not entered)";
+  const dateLabel = selectedDate.toLocaleDateString(undefined, { weekday: "long", day: "numeric", month: "long", year: "numeric" });
+  const subject = `Meeting request — ${dateLabel} at ${selectedSlot}`;
+  const body = `Hi Sowrove,\n\nI'd like to book a 30 min call.\n\nDate: ${dateLabel}\nTime: ${selectedSlot} (Asia/Dhaka)\nName: ${name}\nEmail: ${email}\n\nThanks!`;
+  window.location.href = `mailto:${PROFILE.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+});
+
+renderCalendar();
+renderSlots();
 
 if (typeof pdfjsLib !== "undefined") {
   pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
@@ -419,12 +620,6 @@ STACK.forEach(s => {
   orbitRing.appendChild(el);
 });
 const orbitItems = Array.from(orbitRing.children);
-
-document.getElementById("contactList").innerHTML = CONTACT.map(c => `
-  <div class="info-row">
-    <div class="h">${c.label}</div>
-    <div class="sub">${c.url ? `<a href="${c.url}" target="_blank">${c.value}</a>` : c.value}</div>
-  </div>`).join("");
 
 const railTrack = document.getElementById("railTrack");
 function cardHTML(p, i) {
