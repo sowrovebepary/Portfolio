@@ -51,9 +51,9 @@
   /* the one-time landing intro: a small photo ball hops across the name, then falls off */
   .letter{ display:inline-block; }
   .intro-ball{
-    position:fixed; top:0; left:0; width:64px; height:64px; border-radius:50%;
+    position:fixed; top:0; left:0; width:42px; height:42px; border-radius:50%;
     overflow:hidden; z-index:500; pointer-events:none; opacity:0;
-    box-shadow: 0 10px 26px -8px rgba(0,0,0,0.4); border:2px solid #fff;
+    box-shadow: 0 8px 18px -6px rgba(0,0,0,0.4); border:2px solid #fff;
   }
   .intro-ball img{ width:100%; height:100%; object-fit:cover; }
   #nameAvatar.show{ opacity:1; transform:translate(-50%,-50%) scale(1); }
@@ -782,7 +782,7 @@ async function playIntro() {
   const letterEls = Array.from(heading.querySelectorAll(".letter"));
   if (letterEls.length === 0) { heading.textContent = original; return; }
 
-  const baseY = letterEls[0].getBoundingClientRect().top - 44;
+  const baseY = letterEls[0].getBoundingClientRect().top - 30;
   const points = letterEls.map(el => {
     const r = el.getBoundingClientRect();
     return r.left + r.width / 2;
@@ -793,37 +793,52 @@ async function playIntro() {
   ball.innerHTML = `<img src="${PROFILE.avatar}" alt="" />`;
   document.body.appendChild(ball);
 
-  function place(x, y, scale = 1, opacity = 1) {
-    ball.style.transform = `translate(-50%, -50%) translate(${x}px, ${y}px) scale(${scale})`;
+  function place(x, y, scaleX = 1, scaleY = 1, opacity = 1) {
+    ball.style.transform = `translate(-50%, -50%) translate(${x}px, ${y}px) scale(${scaleX}, ${scaleY})`;
     ball.style.opacity = opacity;
   }
 
-  place(points[0], baseY, 0.6, 0);
+  place(points[0], baseY, 0.6, 0.6, 0);
   await new Promise(r => requestAnimationFrame(r));
   ball.style.transition = "opacity 0.2s ease, transform 0.2s ease";
-  place(points[0], baseY, 1, 1);
+  place(points[0], baseY, 1, 1, 1);
   await wait(220);
   ball.style.transition = "none";
 
-  const HOP_MS = 230;
+  const HOP_MS = 460;
   const BOUNCE_H = 16; // gentle, small bounce height
 
-  for (let i = 1; i < points.length; i++) {
-    const fromX = points[i - 1], toX = points[i];
-    await animateFor(HOP_MS, (t) => {
+  // a soft, water-balloon squash-and-stretch: thin & tall at the peak of
+  // each hop, wide & flat the instant it "touches down" on a letter
+  function jellyHop(fromX, toX, y0, y1) {
+    return animateFor(HOP_MS, (t) => {
       const x = fromX + (toX - fromX) * t;
-      const y = baseY - BOUNCE_H * Math.sin(Math.PI * t);
-      place(x, y, 1, 1);
+      const h = Math.sin(Math.PI * t); // 0 at both ends, 1 at the peak
+      const y = y0 - BOUNCE_H * h;
+      const scaleX = 1.28 - 0.42 * h; // wide at ground, narrows going up
+      const scaleY = 0.72 + 0.5 * h;  // flat at ground, stretches tall going up
+      place(x, y, scaleX, scaleY, 1);
     });
   }
 
-  // off the last letter, fall straight down off the bottom of the page and vanish
+  for (let i = 1; i < points.length; i++) {
+    await jellyHop(points[i - 1], points[i], baseY, baseY);
+  }
+
+  // one small extra hop off the right edge of the last letter ("y"), then fall from there
   const lastX = points[points.length - 1];
-  await animateFor(850, (t) => {
+  const lastRect = letterEls[letterEls.length - 1].getBoundingClientRect();
+  const dropX = lastRect.right + 14;
+
+  await jellyHop(lastX, dropX, baseY, baseY);
+
+  await animateFor(1150, (t) => {
     const eased = t * t; // ease-in, like gravity
     const y = baseY + eased * (window.innerHeight - baseY + 160);
+    const stretch = 1 + eased * 0.6; // stretches longer the faster it falls
+    const squeeze = 1 - eased * 0.28;
     const opacity = t < 0.7 ? 1 : Math.max(0, 1 - (t - 0.7) / 0.3);
-    place(lastX, y, 1, opacity);
+    place(dropX, y, squeeze, stretch, opacity);
   });
 
   ball.remove();
